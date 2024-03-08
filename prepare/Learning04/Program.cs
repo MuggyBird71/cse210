@@ -1,21 +1,19 @@
 // Program.cs
 using System;
-using System.Collections.Generic;
 
 class Program
 {
     static void Main()
     {
-        List<Shape> shapes = new List<Shape>
-        {
-            new Square("Red", 4),
-            new Rectangle("Blue", 5, 7),
-            new Circle("Green", 3)
-        };
+        var simpleAssignment = new Assignment("Samuel Bennett", "Multiplication");
+        Console.WriteLine(simpleAssignment.GetSummary());
 
-        foreach (var shape in shapes)
-        {
-            Console.WriteLine($"{shape.GetType().Name} - Color: {shape.Color}, Area: {shape.GetArea():F2}");
-        }
+        var mathAssignment = new MathAssignment("Roberto Rodriguez", "Fractions");
+        Console.WriteLine(mathAssignment.GetSummary());
+        Console.WriteLine(mathAssignment.GetHomeworkList());
+
+        var writingAssignment = new WritingAssignment("Mary Waters", "European History");
+        Console.WriteLine(writingAssignment.GetSummary());
+        Console.WriteLine(writingAssignment.GetWritingInformation());
     }
 }
