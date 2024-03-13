@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 
 public class GoalManager
 {
-    private readonly List<GoalBase> _goals;
+    private List<GoalBase> _goals;
 
-    // Constructor initializing with an empty list or a provided list of goals
-    public GoalManager(List<GoalBase> goals = null)
+    // Constructor that accepts an initial list of goals
+    public GoalManager(List<GoalBase> goals)
     {
         _goals = goals ?? new List<GoalBase>();
     }
@@ -21,11 +20,8 @@ public class GoalManager
 
     public void CompleteGoal(string title)
     {
-        var goal = _goals.FirstOrDefault(g => g.Title == title);
-        if (goal != null)
-        {
-            goal.MarkComplete();
-        }
+        var goal = _goals.Find(g => g.Title == title);
+        goal?.MarkComplete();
     }
 
     public void DisplayGoals()
