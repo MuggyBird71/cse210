@@ -1,3 +1,4 @@
+using System;
 public class PuzzleChallenge : Challenge
 {
     private string answer;
