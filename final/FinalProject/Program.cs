@@ -1,28 +1,65 @@
-using System;
+using System.Text.Json;
+using System.IO;
 
-class Program
+static void Main(string[] args)
 {
-    static void Main(string[] args)
+    Protagonist player = new Protagonist("Hero", 100, 20);
+    GameEngine gameEngine = new GameEngine(player);
+
+    gameEngine.SetupWorlds();
+    Console.WriteLine("Welcome to Nerd's Revenge: The Homework Crusade!");
+
+    while (player.IsAlive() && !gameEngine.IsGameOver())
     {
-        Protagonist player = new Protagonist("PlayerName", 100, 20);
-        GameEngine gameEngine = new GameEngine(player);
-
-        // Instantiate objects from your other classes as needed
-        AdventureWorld world = new AdventureWorld();
-        Challenge challenge = new Challenge();
-        NPC npc = new NPC();
-        PencilSwordCombat pencilSwordCombat = new PencilSwordCombat();
-        PuzzleChallenge puzzleChallenge = new PuzzleChallenge();
-
-        gameEngine.SetupWorlds();
-        gameEngine.StartAdventure();
-
-        bool gameOver = false;
-        while (!gameOver)
+        Console.WriteLine("\nChoose an action:");
+        Console.WriteLine("1: Explore next world");
+        Console.WriteLine("2: View inventory");
+        Console.WriteLine("3: Rest (Restore Health)");
+        Console.WriteLine("4: View quest log");
+        Console.WriteLine("5: Save Game");
+        Console.WriteLine("6: Load Game");
+        Console.WriteLine("7: Quit");
+        string choice = Console.ReadLine();
+        string saveFilePath;
+        switch (choice)
         {
-            // Your game loop logic
+            case "1":
+                gameEngine.StartAdventure();
+                break;
+            case "2":
+                player.DisplayInventory();
+                break;
+            case "3":
+                player.Rest();
+                break;
+            case "4":
+                player.DisplayQuestLog();
+                break;
+            case "5":
+                saveFilePath = "savegame.json"; // Assign value inside the case block
+                player.SaveGameState(player, saveFilePath);
+                break;
+            case "6":
+                saveFilePath = "savegame.json"; // Assign value inside the case block
+                Protagonist loadedPlayer = gameEngine.LoadGameState(saveFilePath);
+                if (loadedPlayer != null)
+                {
+                    player = loadedPlayer;
+                    player.Name = loadedPlayer.Name;
+                    player.Health = loadedPlayer.Health;
+                    player.PencilSwordStrength = loadedPlayer.PencilSwordStrength;
+                    player.Inventory = loadedPlayer.Inventory;
+                    player.QuestLog = loadedPlayer.QuestLog;
+                    player.ActiveQuests = loadedPlayer.ActiveQuests;
+                    player.RelationshipScores = loadedPlayer.RelationshipScores;
+                    Console.WriteLine("Game state updated successfully.");
+                }
+                break;
+            default:
+                Console.WriteLine("Invalid choice, please select again.");
+                break;
         }
-
-        Console.WriteLine("Game Over!");
     }
+
+    Console.WriteLine("Game Over!");
 }

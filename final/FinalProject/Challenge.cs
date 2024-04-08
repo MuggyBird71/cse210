@@ -1,3 +1,5 @@
+using System;
+
 public abstract class Challenge
 {
     public string Description { get; set; }
@@ -8,4 +10,9 @@ public abstract class Challenge
     }
 
     public abstract void StartChallenge(Protagonist protagonist);
+
+    protected void DisplayMessage(string message)
+    {
+        Console.WriteLine(message);
+    }
 }
