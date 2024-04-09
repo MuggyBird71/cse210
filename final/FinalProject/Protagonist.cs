@@ -103,22 +103,6 @@ public class Protagonist
             Console.WriteLine($"{quest.Title} - {status}");
         }
     }
-    public void SaveGameState(Protagonist protagonist, string filePath)
-{
-    try
-    {
-        // Convert the protagonist object to a JSON string
-        var jsonString = JsonSerializer.Serialize(protagonist, new JsonSerializerOptions { WriteIndented = true });
-        // Write the JSON string to a file
-        File.WriteAllText(filePath, jsonString);
-        Console.WriteLine("Game saved successfully.");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"An error occurred while saving the game: {ex.Message}");
-    }
-}
-
 }
 
 public class InventoryItem

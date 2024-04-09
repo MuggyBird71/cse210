@@ -25,20 +25,20 @@ public class GameEngine
         worlds.Add(algebraicDungeons);
        // Literary Labyrinth
         AdventureWorld literaryLabyrinth = new AdventureWorld("Literary Labyrinth", "A maze filled with classic literature puzzles.");
-        // Add challenges and NPCs for Literary Labyrinth if needed
+        literaryLabyrinth.AddChallenge(new PuzzleChallenge("Complete the quote: 'It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a ____.'", "wife"));
+        literaryLabyrinth.AddNPC(new NPC("Shakespeare's Ghost", "To be, or not to be, that is the question."));
         worlds.Add(literaryLabyrinth);
-
         // History Dungeon
         AdventureWorld historyDungeon = new AdventureWorld("History Dungeon", "A world where history questions guard every path.");
-        // Add challenges and NPCs for History Dungeon if needed
+        historyDungeon.AddChallenge(new PuzzleChallenge("Who was the first president of the United States?", "George Washington"));
+        historyDungeon.AddNPC(new NPC("The Time Traveler", "Careful, actions in the past can change the future!"));
         worlds.Add(historyDungeon);
 
         // Science Fiction World
         AdventureWorld scienceFictionWorld = new AdventureWorld("Science Fiction World", "A world where science fiction becomes reality.");
-        // Add challenges and NPCs for Science Fiction World if needed
+        scienceFictionWorld.AddChallenge(new PencilSwordCombat("An alien with a quantum blade appears!", 70, 15));
+        scienceFictionWorld.AddNPC(new NPC("The Robot", "Does this unit have a soul?"));
         worlds.Add(scienceFictionWorld);
-
-        // Add other worlds for each subject
     }
 
 
@@ -113,6 +113,47 @@ public class GameEngine
     }
 
     // Additional methods for handling world entry, NPC interactions, and item discoveries could be added here
+    public void SaveGameState(string filePath)
+    {
+        GameState gameState = new GameState
+        {
+            Protagonist = this.protagonist,
+            WorldsState = this.worlds.Select(w => new WorldState(w.Name, w.IsCompleted())).ToList()
+            // Populate the GameState with all other needed information
+        };
+
+        try
+        {
+            string jsonString = JsonSerializer.Serialize(gameState, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(filePath, jsonString);
+            Console.WriteLine("Game saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while saving the game: {ex.Message}");
+        }
+    }
+
+[Serializable]
+public class GameState
+{
+    public Protagonist Protagonist { get; set; }
+    public List<WorldState> WorldsState { get; set; } = new List<WorldState>();
+
+}
+
+[Serializable]
+public class WorldState
+{
+    public string WorldName { get; set; }
+    public bool IsCompleted { get; set; }
+
+    public WorldState(string name, bool completed)
+    {
+        WorldName = name;
+        IsCompleted = completed;
+    }
+}
     public Protagonist LoadGameState(string filePath)
     {
         try

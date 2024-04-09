@@ -9,7 +9,9 @@ static void Main(string[] args)
     gameEngine.SetupWorlds();
     Console.WriteLine("Welcome to Nerd's Revenge: The Homework Crusade!");
 
-    while (player.IsAlive() && !gameEngine.IsGameOver())
+    bool gameRunning = true; // Flag to control the game loop
+
+    while (gameRunning && player.IsAlive() && !gameEngine.IsGameOver())
     {
         Console.WriteLine("\nChoose an action:");
         Console.WriteLine("1: Explore next world");
@@ -36,30 +38,26 @@ static void Main(string[] args)
                 player.DisplayQuestLog();
                 break;
             case "5":
-                saveFilePath = "savegame.json"; // Assign value inside the case block
-                player.SaveGameState(player, saveFilePath);
+                saveFilePath = "savegame.json";
+                gameEngine.SaveGameState(saveFilePath);
                 break;
-            case "6":
-                saveFilePath = "savegame.json"; // Assign value inside the case block
+            case "6": // Fix this. 
+                saveFilePath = "savegame.json";
                 Protagonist loadedPlayer = gameEngine.LoadGameState(saveFilePath);
                 if (loadedPlayer != null)
                 {
                     player = loadedPlayer;
-                    player.Name = loadedPlayer.Name;
-                    player.Health = loadedPlayer.Health;
-                    player.PencilSwordStrength = loadedPlayer.PencilSwordStrength;
-                    player.Inventory = loadedPlayer.Inventory;
-                    player.QuestLog = loadedPlayer.QuestLog;
-                    player.ActiveQuests = loadedPlayer.ActiveQuests;
-                    player.RelationshipScores = loadedPlayer.RelationshipScores;
                     Console.WriteLine("Game state updated successfully.");
                 }
+                break;
+            case "7": // Quit option
+                gameRunning = false; // This will exit the game loop
+                Console.WriteLine("Exiting the game...");
                 break;
             default:
                 Console.WriteLine("Invalid choice, please select again.");
                 break;
         }
     }
-
     Console.WriteLine("Game Over!");
 }

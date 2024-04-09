@@ -20,21 +20,55 @@ public class NPC
     {
         Console.WriteLine($"{Name} says: \"{Dialogue}\"");
 
-        if (Name == "The Wise Old Librarian")
+        if (Name == "Math Wizard")
         {
-            Console.WriteLine("Would you like to embark on a quest to retrieve the Ancient Book? (Y/N)");
-            string choice = Console.ReadLine();
-            while (choice.ToUpper() != "Y" && choice.ToUpper() != "N")
+            Console.WriteLine("What is 4 - 2? (Enter the title)");
+            string playerAnswer = Console.ReadLine();
+            if (playerAnswer.Equals("2", StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine("Please answer Y or N:");
-                choice = Console.ReadLine();
+                Console.WriteLine("Correct! The Math Wizard lights his pipe shaped like a factorial.");
+                // protagonist.AddItemToInventory(new InventoryItem("Clue", "A mysterious note from Shakespeare's Ghost."));
             }
+            else
+            {
+                Console.WriteLine("Incorrect. You are the biggest idiot ever.");
+            }
+        }
 
-            if (choice.ToUpper() == "Y")
+        if (Name == "Shakespeare's Ghost")
+        {
+            Console.WriteLine("Can you name the play? 'To be, or not to be, that is the question.' (Enter the title)");
+            string playerAnswer = Console.ReadLine();
+            if (playerAnswer.Equals("Hamlet", StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine("You have accepted the quest!");
-                protagonist.AcceptQuest(new Quest("Retrieve the Ancient Book", "QuestDescription"));
+                Console.WriteLine("Correct! The ghost smiles and fades away, leaving behind a clue.");
+                // protagonist.AddItemToInventory(new InventoryItem("Clue", "A mysterious note from Shakespeare's Ghost."));
             }
+            else
+            {
+                Console.WriteLine("Incorrect. The ghost sighs and disappears.");
+            }
+        }
+
+        if (Name == "The Time Traveler")
+        {
+            Console.WriteLine("The United States bought Alaska from which country? (Enter the title)");
+            string playerAnswer = Console.ReadLine();
+            if (playerAnswer.Equals("Russia", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("Correct! The Time Traveler melts away and lets you by.");
+                // protagonist.AddItemToInventory(new InventoryItem("Clue", "A mysterious note from Shakespeare's Ghost."));
+            }
+            else
+            {
+                Console.WriteLine("Incorrect. The Time Travler explodes and leaves only history textbooks.");
+            }
+        }
+        if (Name == "Space Charlie Chaplin")
+        {
+            Console.WriteLine("What is the best science fiction movie? (Enter the title)");
+            string playerAnswer = Console.ReadLine();
+            Console.WriteLine("Interesting choice! The mysterious figure nods in approval and hands you a clue.");
         }
     }
 }
