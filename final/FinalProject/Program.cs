@@ -46,13 +46,13 @@ class Program
                     if (int.TryParse(Console.ReadLine(), out int selection) && selection >= 1 && selection <= worldsList.Count)
                     {
                         var selectedWorld = worldsList[selection - 1]; // Adjust for zero-based index
-                        gameEngine.ExploreWorld(selectedWorld); // Correctly pass AdventureWorld object
+                        gameEngine.ExploreWorld(0); // Correctly pass AdventureWorld object
                     }
                     else
                     {
                         Console.WriteLine("Invalid selection. Please choose a valid world number.");
                     }
-
+                    gameEngine.SetReadyForNPCInteraction(true);
                     break;
                 case "2":
                     player.DisplayInventory();
@@ -68,11 +68,15 @@ class Program
                     gameEngine.SaveGameState(saveFilePath);
                     break;
                 case "6":
-                    // Logic for loading game state remains the same
+                    saveFilePath = "savegame.json";
+                    Protagonist loadedPlayer = gameEngine.LoadGameState(saveFilePath);
+                    if (loadedPlayer != null)
+                    {
+                        player = loadedPlayer;
+                        Console.WriteLine("Game state updated successfully.");
+                    }
                     break;
                 case "7": // Next Challenge
-                    // This would trigger moving to the next challenge within the current world
-                    // Implement logic in GameEngine to handle this
                     gameEngine.ProceedToNextChallenge();
                     break;
                 case "8": // Quit option
@@ -83,6 +87,10 @@ class Program
                     Console.WriteLine("Invalid choice, please select again.");
                     break;
             }
+        if (gameEngine.IsReadyForNPCInteraction())
+        {
+            gameEngine.HandleNPCInteractions(); // Hypothetical method to manage NPC interactions
+        }
         }
         Console.WriteLine("Game Over!");
     }

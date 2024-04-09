@@ -49,84 +49,86 @@ public class GameEngine
 
 
     public void StartAdventure()
-    {
-        Console.WriteLine("Welcome to the Academy of Enlightened Scholars. Your journey begins amidst a great curse...");
-        // Initial meeting with the Mentor Mage
-        NPC mentorMage = new NPC("Mentor Mage", "The Academy needs your help. The subjects have come alive, each becoming a challenge of its own.");
-        mentorMage.Speak();
-        // The mentor provides the first quest
-        protagonist.AcceptQuest(new Quest("Defeat the Math Monster", "Solve the puzzles of the Algebraic Dungeons."));
-    }
-    public IEnumerable<AdventureWorld> Worlds => worlds.AsReadOnly();
-   public void ExploreWorld(AdventureWorld world)
-    {
-        if (world == null)
         {
-            Console.WriteLine("Invalid world selected.");
-            return;
+            Console.WriteLine("Welcome to the Academy of Enlightened Scholars. Your journey begins amidst a great curse...");
+            // Initial meeting with the Mentor Mage
+            NPC mentorMage = new NPC("Mentor Mage", "The Academy needs your help. The subjects have come alive, each becoming a challenge of its own.");
+            mentorMage.Speak();
+            // The mentor provides the first quest
+            protagonist.AcceptQuest(new Quest("Defeat the Math Monster", "Solve the puzzles of the Algebraic Dungeons."));
         }
 
-        Console.WriteLine($"Now entering {world.Name}.");
+        public IEnumerable<AdventureWorld> Worlds => worlds.AsReadOnly();
 
-        world.InteractWithNPCs();  
-        world.ChallengePlayer(protagonist);   
-    }
-    public void ExploreSelectedWorld(int worldIndex)
-    {
-    if (worldIndex >= 0 && worldIndex < worlds.Count)
-    {
-        var selectedWorld = worlds[worldIndex];
-        Console.WriteLine($"Exploring {selectedWorld.Name}...");
-        selectedWorld.InteractWithNPCs();
-        selectedWorld.ChallengePlayer(protagonist);  // Make sure protagonist is passed correctly
-    }
-    else
-    {
-        Console.WriteLine("Invalid world selection.");
-    }
-}
-    public void ProceedToNextChallenge()
+        public void ExploreWorld(int worldIndex)
         {
-            if (currentWorldIndex < worlds.Count)
+            if (worldIndex < 0 || worldIndex >= worlds.Count)
             {
-                AdventureWorld currentWorld = worlds[currentWorldIndex];
+                Console.WriteLine("Invalid world selection.");
+                return;
+            }
 
-                // Increment to proceed to the next challenge
-                currentChallengeIndex++;
+            currentWorldIndex = worldIndex;
+            currentChallengeIndex = -1; // Reset challenge index for a new world exploration
 
-                if (currentChallengeIndex < currentWorld.Challenges.Count)
+            var world = worlds[currentWorldIndex];
+            Console.WriteLine($"Entering {world.Name}. Let's explore!");
+
+            ProceedToNextChallenge(); // Start with the first challenge
+        }
+
+        public void ProceedToNextChallenge()
+        {
+            var world = worlds[currentWorldIndex];
+            currentChallengeIndex++;
+
+            if (currentChallengeIndex < world.Challenges.Count)
+            {
+                var challenge = world.Challenges[currentChallengeIndex];
+                Console.WriteLine($"Challenge: {challenge.Description}");
+                bool success = challenge.StartChallenge(protagonist);
+                if (success)
                 {
-                    Challenge nextChallenge = currentWorld.Challenges[currentChallengeIndex];
-                    Console.WriteLine($"Next challenge: {nextChallenge.Description}");
-                    bool success = nextChallenge.StartChallenge(protagonist);
-
-                    if (!success)
-                    {
-                        Console.WriteLine("Challenge failed. Try again or move to the next challenge.");
-                    }
+                    Console.WriteLine("Challenge overcome. Proceeding to the next challenge...");
+                    ProceedToNextChallenge(); // Automatically proceed to the next challenge
                 }
                 else
                 {
-                    Console.WriteLine("All challenges in this world have been attempted. Moving to the next world...");
-                    // Reset for the next world
-                    currentWorldIndex++;
-                    currentChallengeIndex = -1; // Reset challenge index for the new world
-
-                    // Automatically move to the next world if there is one
-                    if (currentWorldIndex < worlds.Count)
-                    {
-                        Console.WriteLine($"Now entering {worlds[currentWorldIndex].Name}");
-                        // Optionally auto-start the first challenge of the next world
-                    }
-                    else
-                    {
-                        Console.WriteLine("All worlds explored. Congratulations!");
-                    }
+                    Console.WriteLine("Challenge failed. Try again or explore other options.");
                 }
             }
             else
             {
-                Console.WriteLine("All worlds and challenges have been completed. Congratulations!");
+                Console.WriteLine("All challenges in this world have been completed.");
+                HandleWorldCompletion(); // Move to the next world or end the adventure
+            }
+        }
+
+        public void HandleWorldCompletion()
+        {
+            if (currentWorldIndex + 1 < worlds.Count)
+            {
+                currentWorldIndex++;
+                currentChallengeIndex = -1;  // Reset challenge index for the new world
+                var nextWorld = worlds[currentWorldIndex];
+                Console.WriteLine($"Moving on to the next world: {nextWorld.Name}");
+
+                Console.WriteLine("Do you wish to enter the next world now? (Y/N)");
+                var response = Console.ReadLine();
+                if (response?.ToUpper() == "Y")
+                {
+                    ExploreWorld(currentWorldIndex); // Continue to the next world
+                }
+                else
+                {
+                    Console.WriteLine("Take your time. Explore or interact as you wish.");
+                    // Provide options for what the player can do
+                }
+            }
+            else
+            {
+                Console.WriteLine("Congratulations! You have explored all the worlds and faced all the challenges.");
+                // End game or return to the main menu
             }
         }
     public void Update()
@@ -221,6 +223,23 @@ public class WorldState
             return null; // Return null or a new Protagonist as a fallback
         }
     }
+    private bool readyForNPCInteraction = false;
 
+        public void SetReadyForNPCInteraction(bool ready)
+        {
+            readyForNPCInteraction = ready;
+        }
+
+        public bool IsReadyForNPCInteraction()
+        {
+            return readyForNPCInteraction;
+        }
+
+        public void HandleNPCInteractions()
+        {
+            // Logic to handle NPC interactions
+            // Reset the flag
+            SetReadyForNPCInteraction(false);
+        }
 }
 }
