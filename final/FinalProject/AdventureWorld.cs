@@ -9,6 +9,7 @@ public class AdventureWorld
     public string Location { get; set; }
     private List<Challenge> challenges = new List<Challenge>();
     private List<NPC> npcs = new List<NPC>();
+    public List<Challenge> Challenges { get; private set; } = new List<Challenge>();
 
     public AdventureWorld(string name, string description)
     {
@@ -49,5 +50,11 @@ public class AdventureWorld
         // The world is considered completed if all challenges are completed
         return challenges.All(c => c.IsCompleted);
     }
-
+    public void InteractWithNPCs()
+    {
+        foreach (var npc in npcs)
+        {
+            npc.Speak();  
+        }
+    }
 }

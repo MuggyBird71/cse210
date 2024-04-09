@@ -13,8 +13,11 @@ public class GameEngine
     private Protagonist protagonist;
     private List<AdventureWorld> worlds = new List<AdventureWorld>();
     private DialogueSystem dialogueSystem = new DialogueSystem();
+    private int currentWorldIndex = 0;
+    private int currentChallengeIndex = -1;
 
-        public GameEngine(Protagonist protagonist)
+
+    public GameEngine(Protagonist protagonist)
     {
         this.protagonist = protagonist;
     }
@@ -40,7 +43,7 @@ public class GameEngine
         // Science Fiction World
         AdventureWorld scienceFictionWorld = new AdventureWorld("Science Fiction World", "A world where science fiction becomes reality.");
         scienceFictionWorld.AddChallenge(new PencilSwordCombat("An alien with a quantum blade appears!", 70, 15));
-        scienceFictionWorld.AddNPC(new NPC("The Robot", "Does this unit have a soul?"));
+        scienceFictionWorld.AddNPC(new NPC("Space Charlie Chaplin", "Does this unit have a soul?"));
         worlds.Add(scienceFictionWorld);
     }
 
@@ -54,7 +57,78 @@ public class GameEngine
         // The mentor provides the first quest
         protagonist.AcceptQuest(new Quest("Defeat the Math Monster", "Solve the puzzles of the Algebraic Dungeons."));
     }
+    public IEnumerable<AdventureWorld> Worlds => worlds.AsReadOnly();
+   public void ExploreWorld(AdventureWorld world)
+    {
+        if (world == null)
+        {
+            Console.WriteLine("Invalid world selected.");
+            return;
+        }
 
+        Console.WriteLine($"Now entering {world.Name}.");
+
+        world.InteractWithNPCs();  
+        world.ChallengePlayer(protagonist);   
+    }
+    public void ExploreSelectedWorld(int worldIndex)
+    {
+    if (worldIndex >= 0 && worldIndex < worlds.Count)
+    {
+        var selectedWorld = worlds[worldIndex];
+        Console.WriteLine($"Exploring {selectedWorld.Name}...");
+        selectedWorld.InteractWithNPCs();
+        selectedWorld.ChallengePlayer(protagonist);  // Make sure protagonist is passed correctly
+    }
+    else
+    {
+        Console.WriteLine("Invalid world selection.");
+    }
+}
+    public void ProceedToNextChallenge()
+        {
+            if (currentWorldIndex < worlds.Count)
+            {
+                AdventureWorld currentWorld = worlds[currentWorldIndex];
+
+                // Increment to proceed to the next challenge
+                currentChallengeIndex++;
+
+                if (currentChallengeIndex < currentWorld.Challenges.Count)
+                {
+                    Challenge nextChallenge = currentWorld.Challenges[currentChallengeIndex];
+                    Console.WriteLine($"Next challenge: {nextChallenge.Description}");
+                    bool success = nextChallenge.StartChallenge(protagonist);
+
+                    if (!success)
+                    {
+                        Console.WriteLine("Challenge failed. Try again or move to the next challenge.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("All challenges in this world have been attempted. Moving to the next world...");
+                    // Reset for the next world
+                    currentWorldIndex++;
+                    currentChallengeIndex = -1; // Reset challenge index for the new world
+
+                    // Automatically move to the next world if there is one
+                    if (currentWorldIndex < worlds.Count)
+                    {
+                        Console.WriteLine($"Now entering {worlds[currentWorldIndex].Name}");
+                        // Optionally auto-start the first challenge of the next world
+                    }
+                    else
+                    {
+                        Console.WriteLine("All worlds explored. Congratulations!");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("All worlds and challenges have been completed. Congratulations!");
+            }
+        }
     public void Update()
     {
         // This method would be called in a loop to update the game state
@@ -66,20 +140,6 @@ public class GameEngine
         // }
 
         // This could also handle time-based events or responses to player actions
-    }
-    public void ProgressStory(Protagonist protagonist)
-    {
-        // As the player completes quests and interacts with the world, the story progresses
-        // This method checks for such conditions and updates the game accordingly
-
-        if (protagonist.ActiveQuests.Any(q => q.Title == "Find the Ancient Book"))
-        {
-            // Example of triggering a special dialogue upon completing a quest
-            NPC npc = new NPC("The Wise Old Librarian", "Thank you for finding the Ancient Book!");
-            dialogueSystem.StartDialogue(npc, protagonist);
-            protagonist.CompleteQuest("Find the Ancient Book");
-            // Perhaps this unlocks a new world, provides a key item, or grants a special ability
-        }
     }
 
     public bool IsGameOver()
@@ -94,12 +154,11 @@ public class GameEngine
         }
 
         // Example: Check if the main quest has been completed
-        if (protagonist.QuestLog.All(q => q.IsCompleted))
+        if (protagonist.QuestLog.All(q => q.IsCompleted) && protagonist.QuestLog.Count !=0)
         {
             Console.WriteLine("Congratulations! You have mastered all the challenges and restored peace to the Academy.");
             return true;
         }
-
         return false;
     }
 

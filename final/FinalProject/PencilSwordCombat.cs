@@ -40,8 +40,8 @@ public class PencilSwordCombat : Challenge
                 break; // No need to set victory to false, as it's already initialized to false
             }
 
-            Console.WriteLine("Press any key to continue to the next turn...");
-            Console.ReadKey();
+            Console.WriteLine("Press Enter to continue to the next turn...");
+            Console.ReadLine(); // Changed from Console.ReadKey() to Console.ReadLine()
         }
 
         IsCompleted = victory; // Mark this challenge as completed based on the victory flag

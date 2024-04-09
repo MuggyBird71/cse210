@@ -24,7 +24,7 @@ public class Protagonist
         Name = name;
         Health = health;
         MaxHealth = 100;
-        PencilSwordStrength = pencilSwordStrength;
+        PencilSwordStrength = pencilSwordStrength;   
     }
 
     public void PencilSwordHit()
