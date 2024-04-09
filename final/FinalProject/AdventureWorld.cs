@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-
+using MyGame.Engine;
+using MyGame.Characters;
 public class AdventureWorld
 {
     public string Name { get; set; }

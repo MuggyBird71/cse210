@@ -1,3 +1,5 @@
+using MyGame.Engine;
+using MyGame.Characters;
 public class PencilSwordCombat : Challenge
 {
     private int enemyHealth;

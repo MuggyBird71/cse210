@@ -1,5 +1,6 @@
 using System;
-
+using MyGame.Engine;
+using MyGame.Characters;
 public class PuzzleChallenge : Challenge
 {
     private string answer;

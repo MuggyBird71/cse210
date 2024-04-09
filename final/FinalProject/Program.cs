@@ -1,6 +1,10 @@
+using System;
 using System.Text.Json;
 using System.IO;
+using MyGame.Engine;
+using MyGame.Characters;
 
+class Program{
 static void Main(string[] args)
 {
     Protagonist player = new Protagonist("Hero", 100, 20);
@@ -60,4 +64,5 @@ static void Main(string[] args)
         }
     }
     Console.WriteLine("Game Over!");
+}
 }

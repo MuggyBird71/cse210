@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text.Json;
 using System.IO;
 
-
+namespace MyGame.Characters
+{
 public class Protagonist
 {
     public string Name { get; set; }
@@ -122,4 +123,5 @@ public class Quest
         Title = title;
         Description = description;
     }
+}
 }

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.IO;
+using MyGame.Characters;
 
-
+namespace MyGame.Engine
+{
 public class GameEngine
 {
     private Protagonist protagonist;
@@ -172,4 +174,5 @@ public class WorldState
         }
     }
 
+}
 }

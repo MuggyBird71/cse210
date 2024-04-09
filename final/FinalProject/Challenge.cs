@@ -1,3 +1,5 @@
+using MyGame.Engine;
+using MyGame.Characters;
 public abstract class Challenge
 {
     public string Description { get; private set; }
