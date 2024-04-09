@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.IO;
 using MyGame.Engine;
 using MyGame.Characters;
+using System.Diagnostics;
 
 class Program{
 static void Main(string[] args)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.IO;
 using MyGame.Characters;
+using System.Diagnostics;
 
 namespace MyGame.Engine
 {
@@ -66,16 +67,6 @@ public class GameEngine
 
         // This could also handle time-based events or responses to player actions
     }
-        public void EncounterSubjectGuardian(Protagonist protagonist, string worldName)
-    {
-        AdventureWorld world = worlds.FirstOrDefault(w => w.Name == worldName);
-        if(world != null)
-        {
-            // Example of encountering the Math Monster
-            Console.WriteLine($"You are facing the guardian of {world.Name}.");
-            // Battle or puzzle mechanics go here
-        }
-    }
     public void ProgressStory(Protagonist protagonist)
     {
         // As the player completes quests and interacts with the world, the story progresses
@@ -89,8 +80,6 @@ public class GameEngine
             protagonist.CompleteQuest("Find the Ancient Book");
             // Perhaps this unlocks a new world, provides a key item, or grants a special ability
         }
-
-        // More conditions for story progression here...
     }
 
     public bool IsGameOver()

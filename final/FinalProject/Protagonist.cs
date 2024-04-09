@@ -32,10 +32,10 @@ public class Protagonist
         Console.WriteLine($"{Name} strikes with the Pencil Sword!");
     }
 
-    public void Defend(int enemyAttackStrength)
+        public void Defend(int enemyAttackStrength)
     {
         int damage = enemyAttackStrength / 2;
-        Health -= damage;
+        Health = Math.Max(0, Health - damage);
         Console.WriteLine($"{Name} defended and reduced damage to {damage}. Current health: {Health}");
     }
 
