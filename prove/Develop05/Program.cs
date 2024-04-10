@@ -1,52 +1,89 @@
 using System;
-using System.Collections.Generic;
 
-namespace GoalTrackingApplication
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            // Initialize StorageManager and load existing data
-            StorageManager storageManager = new StorageManager();
-            var (loadedGoals, loadedUser) = storageManager.LoadData();
+        string menuSelected = "";
 
-            GoalManager goalManager = new GoalManager(loadedGoals);
-            User user = loadedUser ?? new User("Default User");
-            UIManager uiManager = new UIManager(goalManager, user, storageManager);
+        GoalsTracker goals = new GoalsTracker();
 
-            bool exitRequested = false;
-            while (!exitRequested)
-            {
-                uiManager.DisplayMainMenu();
-                string option = Console.ReadLine();
-                switch (option)
-                {
+    while (menuSelected != "6") {
+
+        int points = goals.GetAccumulatedPoints();
+
+        Console.WriteLine($"You have {points} points.");
+        Console.WriteLine();
+        Console.WriteLine("Menu Options:");
+        Console.WriteLine("  1. Create New Goal");
+        Console.WriteLine("  2. List Goals");
+        Console.WriteLine("  3. Save Goals");
+        Console.WriteLine("  4. Load Goals");
+        Console.WriteLine("  5. Record Event");
+        Console.WriteLine("  6. Quit");
+        Console.Write("Select a choice from the menu: ");
+
+        menuSelected = Console.ReadLine();
+
+        switch (menuSelected) {
+            case "1":
+
+                Console.WriteLine("The Types of Goals are: ");
+                Console.WriteLine("  1. Simple Goal");
+                Console.WriteLine("  2. Eternal Goal");
+                Console.WriteLine("  3. Checklist Goal");
+                Console.Write("Which type of goal would you like to create? ");
+                string goalType = Console.ReadLine();
+
+                switch (goalType) {
                     case "1":
-                        uiManager.InputGoalDetails();
+                        SimpleGoal newSimpleGoal = new SimpleGoal();
+                        newSimpleGoal.CreateChildGoal();
+                        goals.addGoal(newSimpleGoal);
                         break;
+                    
                     case "2":
-                        uiManager.CompleteGoal();
+                        EternalGoal newEternalGoal = new EternalGoal();
+                        newEternalGoal.CreateChildGoal();
+                        goals.addGoal(newEternalGoal);
                         break;
+
                     case "3":
-                        uiManager.DisplayGoals();
+                        ChecklistGoal newChecklistGoal = new ChecklistGoal();
+                        newChecklistGoal.CreateChildGoal();
+                        goals.addGoal(newChecklistGoal);
                         break;
-                    case "4":
-                        uiManager.ShowAchievements();
-                        break;
-                    case "5":
-                        exitRequested = true;
-                        break;
+                    
                     default:
-                        Console.WriteLine("Invalid option, please try again.");
+                        Console.WriteLine("Invalid goal type. Please try again.");
                         break;
                 }
-            }
+                break;
 
-            // Save the state before exiting
-            // Before exiting, when saving the state
-            storageManager.SaveData(new List<GoalBase>(goalManager.Goals), user);
-            Console.WriteLine("Progress saved. Exiting application...");
+            case "2":
+                goals.ListGoals();
+                break;
+
+            case "3":
+                goals.SaveGoals();
+                break;
+
+            case "4":
+                goals.LoadGoals();
+                break;
+
+            case "5":
+                goals.RecordEventInTracker();
+                break;
+
+            case "6":
+                Environment.Exit(0);
+                break;
+
+            default:
+                Console.WriteLine("Please select a valid number from the menu options.");
+                break;
+            }
         }
     }
 }
