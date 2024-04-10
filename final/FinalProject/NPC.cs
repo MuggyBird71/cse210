@@ -1,75 +1,51 @@
 using System;
-using MyGame.Engine;
-using MyGame.Characters;
-public class NPC
+
+class NPC : Character
 {
-    public string Name { get; private set; }
-    public string Dialogue { get; private set; }
+    public List<string> Dialogues { get; private set; }
+    public bool IsTeacher { get; private set; }
+    public string Question { get; private set; }
+    public string Answer { get; private set; }
 
-    public NPC(string name, string dialogue)
+    // Constructor for regular NPCs
+    public NPC(string name, int health, int attackDamage, int defense, List<string> dialogues) 
+        : base(name, health, attackDamage, defense)
     {
-        Name = name;
-        Dialogue = dialogue;
+        Dialogues = dialogues ?? new List<string>();
+        IsTeacher = false;
     }
 
-    public void Speak()
+    // Constructor for Teacher NPCs with educational challenges
+    public NPC(string name, int health, int attackDamage, int defense, string question, string answer) 
+        : base(name, health, attackDamage, defense)
     {
-        Console.WriteLine($"{Name} says: \"{Dialogue}\"");
+        Question = question;
+        Answer = answer;
+        IsTeacher = true;
     }
 
-    public void Interact(Protagonist protagonist)
+    public void Interact()
     {
-        Console.WriteLine($"{Name} says: \"{Dialogue}\"");
-
-        if (Name == "Math Wizard")
+        if (IsTeacher)
         {
-            Console.WriteLine("What is 4 - 2? (Enter the title)");
-            string playerAnswer = Console.ReadLine();
-            if (playerAnswer.Equals("2", StringComparison.OrdinalIgnoreCase))
+            Console.WriteLine($"{Name} challenges you with a question: {Question}");
+            Console.Write("Your answer: ");
+            string userAnswer = Console.ReadLine();
+            if (userAnswer.Trim().Equals(Answer, StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine("Correct! The Math Wizard lights his pipe shaped like a factorial.");
-                // protagonist.AddItemToInventory(new InventoryItem("Clue", "A mysterious note from Shakespeare's Ghost."));
+                Console.WriteLine("Correct! You have bested this challenge.");
             }
             else
             {
-                Console.WriteLine("Incorrect. You are the biggest idiot ever.");
+                Console.WriteLine("Incorrect. Better luck next time.");
             }
         }
-
-        if (Name == "Shakespeare's Ghost")
+        else
         {
-            Console.WriteLine("Can you name the play? 'To be, or not to be, that is the question.' (Enter the title)");
-            string playerAnswer = Console.ReadLine();
-            if (playerAnswer.Equals("Hamlet", StringComparison.OrdinalIgnoreCase))
+            foreach (var dialogue in Dialogues)
             {
-                Console.WriteLine("Correct! The ghost smiles and fades away, leaving behind a clue.");
-                // protagonist.AddItemToInventory(new InventoryItem("Clue", "A mysterious note from Shakespeare's Ghost."));
+                Console.WriteLine($"{Name} says: \"{dialogue}\"");
             }
-            else
-            {
-                Console.WriteLine("Incorrect. The ghost sighs and disappears.");
-            }
-        }
-
-        if (Name == "The Time Traveler")
-        {
-            Console.WriteLine("The United States bought Alaska from which country? (Enter the title)");
-            string playerAnswer = Console.ReadLine();
-            if (playerAnswer.Equals("Russia", StringComparison.OrdinalIgnoreCase))
-            {
-                Console.WriteLine("Correct! The Time Traveler melts away and lets you by.");
-                // protagonist.AddItemToInventory(new InventoryItem("Clue", "A mysterious note from Shakespeare's Ghost."));
-            }
-            else
-            {
-                Console.WriteLine("Incorrect. The Time Travler explodes and leaves only history textbooks.");
-            }
-        }
-        if (Name == "Space Charlie Chaplin")
-        {
-            Console.WriteLine("What is the best science fiction movie? (Enter the title)");
-            string playerAnswer = Console.ReadLine();
-            Console.WriteLine("Interesting choice! The mysterious figure nods in approval and hands you a clue.");
         }
     }
 }
