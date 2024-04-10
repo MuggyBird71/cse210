@@ -8,23 +8,14 @@ class Location
     public string Description { get; private set; }
     private List<Location> connectedLocations;
     private List<NPC> npcs;
-    public bool IsUnlocked { get; private set; } // New property to track if the location is unlocked
 
     // Constructor
-    public Location(string name, string description, bool isUnlocked = false)
+    public Location(string name, string description)
     {
         Name = name;
         Description = description;
         connectedLocations = new List<Location>();
         npcs = new List<NPC>();
-        IsUnlocked = isUnlocked; // Initially, some locations might be locked
-    }
-
-    // Method to unlock the location
-    public void Unlock()
-    {
-        IsUnlocked = true;
-        OnLocationUnlocked(); // Optional: Notify the game or player that a new location has been unlocked
     }
 
     // Method to add a connected location
@@ -36,10 +27,10 @@ class Location
         }
     }
 
-    // Method to get the list of unlocked connected locations
+    // Method to get the list of connected locations
     public List<Location> GetConnectedLocations()
     {
-        return connectedLocations.Where(loc => loc.IsUnlocked).ToList();
+        return new List<Location>(connectedLocations); // Directly return all connected locations without checking for unlock status
     }
 
     // Method to add an NPC to the location
@@ -54,7 +45,7 @@ class Location
     // Method to get the list of NPCs in the location
     public List<NPC> GetNPCs()
     {
-        return npcs;
+        return new List<NPC>(npcs);
     }
 
     // Method to update the description of the location
@@ -66,15 +57,8 @@ class Location
     // Optional: A method to handle location-specific events or challenges
     public void TriggerEvent(string eventName)
     {
-        // Logic to trigger an event or challenge based on the eventName
         Console.WriteLine($"Event triggered: {eventName} in {Name}");
-        // This can include unlocking new areas, revealing hidden NPCs, or changing the location's description
     }
 
-    // Optional: Callback method when the location is unlocked
-    protected virtual void OnLocationUnlocked()
-    {
-        Console.WriteLine($"{Name} has been unlocked!");
-        // This method can be overridden in derived classes for location-specific unlock behaviors
-    }
+    // Removing the Unlock method and IsUnlocked property since all locations will be accessible from the start
 }
