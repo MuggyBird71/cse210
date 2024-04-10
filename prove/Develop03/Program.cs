@@ -1,52 +1,47 @@
 using System;
 
-class Program
+namespace DailyScripture
 {
-    static void Main(string[] args)
+    class Program
     {
-        ScriptureLibrary scriptureLibrary = new ScriptureLibrary();
-
-        // Attempt to load scriptures from a file (ensure the file path is correct)
-        string filePath = "scriptures.txt"; // Update this path as necessary
-        scriptureLibrary.LoadScripturesFromFile(filePath);
-
-        // If no scriptures are loaded (file not found or empty), you could add some default scriptures
-        if (scriptureLibrary.IsEmpty())
+        
+        static void Main()
         {
-            // Add default scripture if library is empty
-            scriptureLibrary.AddScripture(new Reference("John", 3, 16), "For God so loved the world...");
-            // Add more default scriptures as needed
-        }
-
-        // Main loop
-        bool exitProgram = false;
-        while (!exitProgram)
-        {
-            Scripture scripture = scriptureLibrary.GetRandomScripture();
-            Console.Clear();
-            scripture.DisplayScripture();
-            Console.WriteLine("\nPress enter to hide words, type 'quit' to exit.");
-
-            string userInput = Console.ReadLine();
-            if (userInput.Equals("quit", StringComparison.OrdinalIgnoreCase))
+            Scripture scripture = new Scripture("3 Nephi ", 5, 13, "Behold, I am a disciple of Jesus Christ, the Son of God. I have been called of him to declare his word among his people, that they might have everlasting life. ");
+            try
             {
-                exitProgram = true;
-            }
-            else
-            {
-                // Hide one word (or more, based on your logic) and redisplay
-                scripture.HideRandomWords(1); // Adjust the number of words to hide as desired
                 Console.Clear();
-                scripture.DisplayScripture();
+            }
+            catch (System.IO.IOException)
+            {
+                // Handle or ignore the exception when the console is not available.
+            }
 
-                if (scripture.AllWordsHidden())
+            scripture.Display(); 
+            Console.WriteLine("\nPress Enter to continue or type 'quit' to exit.");
+
+            while (true)
+            {
+                string input = Console.ReadLine();
+                if (input.ToLower() == "quit")
+                    break;
+
+                if (!scripture.HideRandomWord())
                 {
-                    Console.WriteLine("\nAll words are hidden. Press enter to continue with a new scripture or type 'quit' to exit.");
-                    if (Console.ReadLine().Equals("quit", StringComparison.OrdinalIgnoreCase))
-                    {
-                        exitProgram = true;
-                    }
+                    Console.WriteLine("\nYou got this, you memorized the scripture!!");
+                    break;
                 }
+
+                try
+                {
+                    Console.Clear();
+                }
+                catch (System.IO.IOException)
+                {
+                    // Handle or ignore the exception when the console is not available.
+                }
+                scripture.Display();
+                Console.WriteLine("\nPress Enter to continue or type 'quit' to exit.");
             }
         }
     }

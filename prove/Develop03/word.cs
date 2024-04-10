@@ -1,11 +1,16 @@
-public class Word
-{
-    public string Text { get; private set; }
-    public bool IsHidden { get; set; }
+using System;
 
-    public Word(string text)
+namespace DailyScripture
+{      
+    public class Word
     {
-        Text = text;
-        IsHidden = false;
+        public string Text { get; set; }
+        public bool IsHidden { get; set; }
+
+        public Word(string text)
+        {
+            Text = text;
+            IsHidden = false;
+        }
     }
 }
